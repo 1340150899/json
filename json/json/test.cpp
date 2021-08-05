@@ -24,7 +24,14 @@ static int test_pass = 0;
 		EXPECT_EQ_INT(LEPT_PARSE_OK, lept_parse(&v, json));\
 		EXPECT_EQ_INT(expect, lept_get_type(&v));\
 	}while(0)
-
+//测试获取的数字
+#define TEST_NUMBER(json)\
+	do{\
+		lept_value v;\
+		EXPECT_EQ_INT(LEPT_PARSE_OK, lept_parse(&v, json));\
+		EXPECT_EQ_INT(LEPT_NUMBER, lept_get_type(&v));\
+		cout<< "get_number: "<<lept_get_number(&v)<< endl;\
+	}while(0)
 void test_parse() {
 	//null
 	TEST_ALL(LEPT_NULL, "null");
@@ -33,10 +40,13 @@ void test_parse() {
 	//false
 	TEST_ALL(LEPT_FALSE, "false");
 	//number
-	TEST_ALL(LEPT_NUMBER, "123n");
+	TEST_ALL(LEPT_NUMBER, "123");
+	//get_number
+	TEST_NUMBER("1e10");
+	
 	//测试错误情况
 	TEST_ALL(LEPT_NULL, "null n");
-
 	cout << test_pass << " " << test_count << " " 
 	<< "passed:" << test_pass * 100.0 / test_count << "%"<< endl;
+
 }

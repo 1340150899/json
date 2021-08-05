@@ -4,8 +4,9 @@
 #include<iostream>
 using namespace std;
 //移动一下指针
-#define EXPECT(c, ch) do{assert(*c->json == (ch)); ++c->json;} while(0)
-
+#define EXPECT(c, ch)      do{assert(*c->json == (ch)); ++c->json;} while(0)
+#define ISDIGIT(ch)        ((ch) >= '0' && (ch) <= '9')
+#define ISDIGIT1TO9(ch)    ((ch) >= '1' &&  (ch) <= '9')
 struct lept_context{
 	const char* json;
 };
@@ -49,14 +50,33 @@ static int lept_parse_false(lept_context* c, lept_value* v) {
 }
 //数字
 static int lept_parse_number(lept_context* c, lept_value* v) {
-	char* end;
-	v->n = strtod(c->json, &end);
-	if (c->json == end) {
-		//cout << c->json << endl << end << endl;
-		return LEPT_PARSE_INVALID_VALUE;
+	const char *p = c->json;
+	//判断是否是json格式的数字
+	if (*p == '-') ++p;
+	if (*p == '0') ++p;
+	else {
+		if (!ISDIGIT1TO9(*p)) return LEPT_PARSE_INVALID_VALUE;
+		for (++p; ISDIGIT(*p); ++p);
 	}
-	c->json = end;
+	if (*p == '.') {
+		++p;
+		if (!ISDIGIT(*p)) return LEPT_PARSE_INVALID_VALUE;
+		for (++p; ISDIGIT(*p); ++p);
+	}
+	if (*p == 'e' || *p == 'E') {
+		++p;
+		if (*p == '+' || *p == '-') ++p;
+		if (!ISDIGIT(*p)) return LEPT_PARSE_INVALID_VALUE;
+		for (++p; ISDIGIT(*p); ++p);
+	}
+	errno = 0;
+	v->n = strtod(c->json, nullptr);
+	if (errno == ERANGE && (v->n == HUGE_VAL) || v->n == -HUGE_VAL) {
+		return LEPT_PARSE_NUMBER_TOO_BIG;
+	}
 	v->type = LEPT_NUMBER;
+	//如果是p应该走到了末尾
+	c->json = p;
 	return LEPT_PARSE_OK;
 }
 //判断数据类型
@@ -80,8 +100,6 @@ int lept_parse(lept_value* v, const char* json) {
 	if ((ret = lept_parse_value(&t, v)) == LEPT_PARSE_OK){
 		lept_parse_whitespace(&t);
 		if (*t.json != '\0') {
-			//当判断数字时可以判断其中有没有参杂除了数字外的其他字符
-			//因为end赋值给了json 而当字符串中参杂时end是不会走到\0的
 			ret = LEPT_PARSE_ROOT_NOT_SINGULAR;
 			v->type = LEPT_NULL;
 		}
