@@ -15,6 +15,7 @@ static int test_pass = 0;
 		else fprintf(stderr, "%s:%d: expect: " format " actual: " format "\n", __FILE__, __LINE__, expect, actual);\
 	}while(0)
 #define EXPECT_EQ_INT(expect, actual) EXPECT_EQ_BASE((expect == actual), expect, actual, "%d")
+#define EXPECT_EQ_NUMBER(expect, actual) EXPECT_EQ_BASE((expect == actual), expect, actual, "%.17g")
 
 //≤‚ ‘∫Í
 #define TEST_ALL(expect, json)\
@@ -31,8 +32,11 @@ void test_parse() {
 	TEST_ALL(LEPT_TRUE, "true");
 	//false
 	TEST_ALL(LEPT_FALSE, "false");
+	//number
+	TEST_ALL(LEPT_NUMBER, "123n");
 	//≤‚ ‘¥ÌŒÛ«Èøˆ
 	TEST_ALL(LEPT_NULL, "null n");
+
 	cout << test_pass << " " << test_count << " " 
 	<< "passed:" << test_pass * 100.0 / test_count << "%"<< endl;
 }
