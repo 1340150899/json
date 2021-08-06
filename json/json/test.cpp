@@ -154,7 +154,6 @@ void test_parse() {
 
 
 
-
 	//Êä³ö²âÊÔ½á¹û
 	cout << test_pass << " " << test_count << " " 
 	<< "passed:" << test_pass * 100.0 / test_count << "%"<< endl;
