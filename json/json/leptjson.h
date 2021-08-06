@@ -20,7 +20,6 @@ struct lept_value {
 	lept_type type;
 };
 
-
 enum
 {
 	//一切正常
@@ -33,8 +32,11 @@ enum
 	LEPT_PARSE_ROOT_NOT_SINGULAR,
 	//超过数字的最大值
 	LEPT_PARSE_NUMBER_TOO_BIG,
+	//字符串中含有 \0
 	LEPT_PARSE_MISS_QUOTATION_MARK,
+	//无法识别转义符 \ 后面的字符
 	LEPT_PARSE_INVALID_STRING_ESCAPE,
+	//字符串中有不合法的字符
 	LEPT_PARSE_INVALID_STRING_CHAR
 };
 
