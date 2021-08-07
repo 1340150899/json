@@ -6,7 +6,7 @@
 using namespace std;
 static int test_count = 0;
 static int test_pass = 0;
-//ÓÃºê²âÊÔÊµ¼ÊºÍÔ¤¼ÆµÄÇé¿ö
+//ç”¨å®æµ‹è¯•å®é™…å’Œé¢„è®¡çš„æƒ…å†µ
 #define EXPECT_EQ_BASE(equality, expect, actual, format)\
 	do{\
 		++test_count;\
@@ -26,14 +26,14 @@ static int test_pass = 0;
 
 #define EXPECT_FALSE(actual) EXPECT_EQ_BASE((actual) == 0, "false", "true", "%s")
 
-//²âÊÔºê
+//æµ‹è¯•å®
 #define TEST_ALL(expect, json)\
 	do{\
 		lept_value v;\
 		EXPECT_EQ_INT(LEPT_PARSE_OK, lept_parse(&v, json));\
 		EXPECT_EQ_INT(expect, lept_get_type(&v));\
 	}while(0)
-//²âÊÔ»ñÈ¡µÄÊı×Ö
+//æµ‹è¯•è·å–çš„æ•°å­—
 #define TEST_NUMBER(expect, json)\
     do {\
         lept_value v;\
@@ -63,7 +63,7 @@ static void test_parse_number() {
 	TEST_NUMBER(1.234E+10, "1.234E+10");
 	TEST_NUMBER(1.234E-10, "1.234E-10");
 
-	// Î¬»ù°Ù¿ÆË«¾«¶È¸¡µãÊı µÄÒ»Ğ©±ß½çÖµ
+	// ç»´åŸºç™¾ç§‘åŒç²¾åº¦æµ®ç‚¹æ•° çš„ä¸€äº›è¾¹ç•Œå€¼
 	TEST_NUMBER(0.0, "1e-10000"); /* must underflow */
 	TEST_NUMBER(1.0000000000000002, "1.0000000000000002"); /* the smallest number > 1 */
 	TEST_NUMBER(4.9406564584124654e-324, "4.9406564584124654e-324"); /* minimum denormal */
@@ -91,9 +91,16 @@ static void test_parse_string() {
 	TEST_STRING("", "\"\"");
 	TEST_STRING("Hello World", "\"Hello World\"");
 #endif
-#if 1
+#if 0
 	TEST_STRING("Hello\nWorld", "\"Hello\\nWorld\"");
 	TEST_STRING("\" \\ / \b \f \n \r \t", "\"\\\" \\\\ \\/ \\b \\f \\n \\r \\t\"");
+#endif
+#if 1
+	TEST_STRING("\x24", "\"\\u0024\"");         /* Dollar sign U+0024 */
+	TEST_STRING("\xC2\xA2", "\"\\u00A2\"");     /* Cents sign U+00A2 */
+	TEST_STRING("\xE2\x82\xAC", "\"\\u20AC\""); /* Euro sign U+20AC */
+	TEST_STRING("\xF0\x9D\x84\x9E", "\"\\uD834\\uDD1E\"");  /* G clef sign U+1D11E */
+	TEST_STRING("\xF0\x9D\x84\x9E", "\"\\ud834\\udd1e\"");  /* G clef sign U+1D11E */
 #endif
 }
 
@@ -108,7 +115,7 @@ static void test_parse_string() {
     } while(0)
 
 static void test_parse_invalid_value() {
-	//²âÊÔ´íÎóÊı×Ö
+	//æµ‹è¯•é”™è¯¯æ•°å­—
 	TEST_ERROR(LEPT_PARSE_INVALID_VALUE, "+0");
 	TEST_ERROR(LEPT_PARSE_INVALID_VALUE, "+1");
 	TEST_ERROR(LEPT_PARSE_INVALID_VALUE, ".123"); /* at least one digit before '.' */
@@ -119,8 +126,8 @@ static void test_parse_invalid_value() {
 	TEST_ERROR(LEPT_PARSE_INVALID_VALUE, "nan");
 }
 
-//²»Ê¹ÓÃlept_parse²âÊÔ
-//²»Ê¹ÓÃlept_parse²âÊÔÊ±ĞèÒª×ÔĞĞÓÃlept_init¡¢lept_set³õÊ¼»¯
+//ä¸ä½¿ç”¨lept_parseæµ‹è¯•
+//ä¸ä½¿ç”¨lept_parseæµ‹è¯•æ—¶éœ€è¦è‡ªè¡Œç”¨lept_initã€lept_setåˆå§‹åŒ–
 static void test_access_string() {
 	lept_value v;
 	lept_init(&v);
@@ -142,19 +149,19 @@ void test_parse() {
 	//TEST_ALL(LEPT_NUMBER, "123");
 	//test_parse_number();
 	////string
-	//test_parse_string();
+	test_parse_string();
 
 
-	//²âÊÔ´íÎóÇé¿ö
+	//æµ‹è¯•é”™è¯¯æƒ…å†µ
 	//TEST_ALL(LEPT_NULL, "null n");
 	//test_parse_invalid_value();
 
-	//²»Ê¹ÓÃparse²âÊÔ
-	test_access_string(); 
+	//ä¸ä½¿ç”¨parseæµ‹è¯•
+	//test_access_string(); 
 
 
 
-	//Êä³ö²âÊÔ½á¹û
+	//è¾“å‡ºæµ‹è¯•ç»“æœ
 	cout << test_pass << " " << test_count << " " 
 	<< "passed:" << test_pass * 100.0 / test_count << "%"<< endl;
 

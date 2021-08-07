@@ -37,7 +37,11 @@ enum
 	//无法识别转义符 \ 后面的字符
 	LEPT_PARSE_INVALID_STRING_ESCAPE,
 	//字符串中有不合法的字符
-	LEPT_PARSE_INVALID_STRING_CHAR
+	LEPT_PARSE_INVALID_STRING_CHAR,
+	//utf-8不合法
+	LEPT_PARSE_INVALID_UNICODE_HEX,
+	//
+	LEPT_PARSE_INVALID_UNICODE_SURROGATE
 };
 
 #define lept_init(v){(v)->type = LEPT_NULL;} while(0)
