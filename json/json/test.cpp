@@ -137,7 +137,11 @@ static void test_access_string() {
 	EXPECT_EQ_STRING("Hello", lept_get_string(&v), lept_get_string_length(&v));
 	lept_free(&v);
 }
-
+static void lept_parse_array() {
+	lept_value v;
+	lept_init(&v);
+	EXPECT_EQ_INT(LEPT_PARSE_OK, lept_parse(&v, "[ null , false , true , 123 , \"abc\" ]"));
+}
 void test_parse() {
 	////null
 	//TEST_ALL(LEPT_NULL, "null");
@@ -149,8 +153,9 @@ void test_parse() {
 	//TEST_ALL(LEPT_NUMBER, "123");
 	//test_parse_number();
 	////string
-	test_parse_string();
-
+	//test_parse_string();
+	//array
+	lept_parse_array();
 
 	//测试错误情况
 	//TEST_ALL(LEPT_NULL, "null n");
