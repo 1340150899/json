@@ -8,46 +8,54 @@ enum lept_type
 	LEPT_STRING, LEPT_ARRAY, LEPT_OBJECT
 };
 
+struct lept_member;
+
 struct lept_value {
 	union
 	{
+		//string
 		struct{
 			char *s;
 			size_t len;	
 		}s;
+		//array
 		struct {
 			lept_value* e;
 			size_t size;
 		}a;
+		//object
+		struct {
+			lept_member* m;
+			size_t size;
+		}o;
 		double n;
 	}u;
 	lept_type type;
 };
 
+struct lept_member {
+	char *k;          //key string 
+	size_t klen;      //key len
+	lept_value v;     //member value
+};
+
+
 enum
 {
-	//一切正常
 	LEPT_PARSE_OK = 0,
-	//若一个 JSON 只含有空白，传回 LEPT_PARSE_EXPECT_VALUE。
 	LEPT_PARSE_EXPECT_VALUE,
-	//若值格式不对 不知道是什么，传回 LEPT_PARSE_INVALID_VALUE。
 	LEPT_PARSE_INVALID_VALUE,
-	//若一个值之后 在空白之后还有其他字符，传回 LEPT_PARSE_ROOT_NOT_SINGULAR。
 	LEPT_PARSE_ROOT_NOT_SINGULAR,
-	//超过数字的最大值
 	LEPT_PARSE_NUMBER_TOO_BIG,
-	//字符串中含有 \0
 	LEPT_PARSE_MISS_QUOTATION_MARK,
-	//无法识别转义符 \ 后面的字符
 	LEPT_PARSE_INVALID_STRING_ESCAPE,
-	//字符串中有不合法的字符
 	LEPT_PARSE_INVALID_STRING_CHAR,
-	//utf-8不合法
 	LEPT_PARSE_INVALID_UNICODE_HEX,
-	//
 	LEPT_PARSE_INVALID_UNICODE_SURROGATE,
-	//
-	LEPT_PARSE_MISS_COMMA_OR_SQUARE_BRACKET
+	LEPT_PARSE_MISS_COMMA_OR_SQUARE_BRACKET,
+	LEPT_PARSE_MISS_KEY,
+	LEPT_PARSE_MISS_COLON,
+	LEPT_PARSE_MISS_COMMA_OR_CURLY_BRACKET
 };
 
 #define lept_init(v){(v)->type = LEPT_NULL;} while(0)
@@ -74,4 +82,10 @@ void lept_set_string(lept_value* v, const char* s, size_t len);
 
 size_t lept_get_array_size(const lept_value* v);
 lept_value* lept_get_array_element(const lept_value* v, size_t index);
+
+
+size_t lept_get_object_size(const lept_value* v);
+const char* lept_get_object_key(const lept_value* v, size_t index);
+size_t lept_get_object_key_length(const lept_value* v, size_t index);
+lept_value* lept_get_object_value(const lept_value* v, size_t index);
 #endif // !LEPTJSON_ H__

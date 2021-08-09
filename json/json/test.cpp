@@ -141,6 +141,25 @@ static void lept_parse_array() {
 	lept_value v;
 	lept_init(&v);
 	EXPECT_EQ_INT(LEPT_PARSE_OK, lept_parse(&v, "[ null , false , true , 123 , \"abc\" ]"));
+	lept_free(&v);
+}
+
+static void lept_parse_objeck() {
+	lept_value v;
+	lept_init(&v);
+	EXPECT_EQ_INT(LEPT_PARSE_OK, lept_parse(&v,
+		" { "
+		"\"n\" : null , "
+		"\"f\" : false , "
+		"\"t\" : true , "
+		"\"i\" : 123 , "
+		"\"s\" : \"abc\", "
+		"\"a\" : [ 1, 2, 3 ],"
+		"\"o\" : { \"1\" : 1, \"2\" : 2, \"3\" : 3 }"
+		" } "
+	));
+	EXPECT_EQ_INT(LEPT_OBJECT, lept_get_type(&v));
+	lept_free(&v);
 }
 void test_parse() {
 	////null
@@ -155,8 +174,9 @@ void test_parse() {
 	////string
 	//test_parse_string();
 	//array
-	lept_parse_array();
-
+	//lept_parse_array();
+	//object
+	lept_parse_objeck();
 	//测试错误情况
 	//TEST_ALL(LEPT_NULL, "null n");
 	//test_parse_invalid_value();
