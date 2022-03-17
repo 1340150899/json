@@ -1,0 +1,5 @@
+/mnt/hgfs/vm共享/json/json/CMakeFiles/rebuild_cache.dir
+/mnt/hgfs/vm共享/json/json/CMakeFiles/edit_cache.dir
+/mnt/hgfs/vm共享/json/json/obj/CMakeFiles/rebuild_cache.dir
+/mnt/hgfs/vm共享/json/json/obj/CMakeFiles/edit_cache.dir
+/mnt/hgfs/vm共享/json/json/obj/CMakeFiles/test.dir

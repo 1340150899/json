@@ -1,0 +1,38 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/mnt/hgfs/vm共享/json/json/inc/leptjson.h
+stddef.h
+-
+
+/mnt/hgfs/vm共享/json/json/obj/leptjson.c
+../inc/leptjson.h
+/mnt/hgfs/vm共享/json/json/inc/leptjson.h
+stdio.h
+-
+assert.h
+-
+errno.h
+-
+math.h
+-
+stdlib.h
+-
+string.h
+-
+
+/mnt/hgfs/vm共享/json/json/obj/test_main.c
+string.h
+-
+stdio.h
+-
+stdlib.h
+-
+../inc/leptjson.h
+/mnt/hgfs/vm共享/json/json/inc/leptjson.h
+

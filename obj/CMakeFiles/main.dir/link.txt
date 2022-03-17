@@ -1,0 +1,1 @@
+/usr/bin/cc CMakeFiles/main.dir/leptjson.c.o CMakeFiles/main.dir/test_main.c.o -o ../bin/main 
